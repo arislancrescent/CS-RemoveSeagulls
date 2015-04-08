@@ -60,8 +60,8 @@ namespace RemoveSeagulls
                 {
                     try
                     {
-                        SkylinesOverwatch.Settings.Instance.Disabled.AnimalMonitor  = false;
-                        SkylinesOverwatch.Settings.Instance.Disabled.Birds          = false;
+                        SkylinesOverwatch.Settings.Instance.Enable.AnimalMonitor  = true;
+                        SkylinesOverwatch.Settings.Instance.Enable.Birds          = true;
 
                         _data = SkylinesOverwatch.Data.Instance;
                     }
