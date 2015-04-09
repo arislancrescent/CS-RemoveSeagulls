@@ -60,6 +60,7 @@
     <Compile Include="Identity.cs" />
     <Compile Include="Remover.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Loader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
