@@ -5,6 +5,7 @@ using System.Threading;
 using ICities;
 using ColossalFramework;
 using ColossalFramework.Math;
+using ColossalFramework.Plugins;
 using ColossalFramework.UI;
 using UnityEngine;
 
@@ -12,15 +13,26 @@ namespace RemoveSeagulls
 {
     public class Remover : ThreadingExtensionBase
     {
+        private Settings _settings;
         private Helper _helper;
-
-        private SkylinesOverwatch.Data _data;
 
         private bool _initialized;
         private bool _terminated;
 
+        protected bool IsOverwatched()
+        {
+            foreach (var plugin in PluginManager.instance.GetPluginsInfo())
+            {
+                if (plugin.publishedFileID.AsUInt64 == 421028969)
+                    return true;
+            }
+
+            return false;
+        }
+
         public override void OnCreated(IThreading threading)
         {
+            _settings = Settings.Instance;
             _helper = Helper.Instance;
 
             _initialized = false;
@@ -31,18 +43,12 @@ namespace RemoveSeagulls
 
         public override void OnBeforeSimulationTick()
         {
-            try
+            if (_terminated) return;
+
+            if (!_helper.GameLoaded)
             {
-                if (!SkylinesOverwatch.Helper.Instance.GameLoaded)
-                {
-                    _initialized = false;
-                    return;
-                }
-            }
-            catch (Exception e)
-            {
-                _helper.Log("[ARIS] Skylines Overwatch not found. Unloading...");
-                _terminated = true;
+                _initialized = false;
+                return;
             }
 
             base.OnBeforeSimulationTick();
@@ -52,34 +58,32 @@ namespace RemoveSeagulls
         {
             if (_terminated) return;
 
+            if (!_helper.GameLoaded) return;
+
             try
             {
-                if (!SkylinesOverwatch.Helper.Instance.GameLoaded) return;
-
                 if (!_initialized)
                 {
-                    try
+                    if (!IsOverwatched())
                     {
-                        SkylinesOverwatch.Settings.Instance.Enable.AnimalMonitor  = true;
-                        SkylinesOverwatch.Settings.Instance.Enable.Birds          = true;
-
-                        _data = SkylinesOverwatch.Data.Instance;
-                    }
-                    catch (Exception e)
-                    {
-                        _helper.Log("[ARIS] Skylines Overwatch not found. Unloading...");
+                        _helper.Log("[ARIS] Skylines Overwatch not found. Terminating...");
                         _terminated = true;
+
+                        return;
                     }
+
+                    SkylinesOverwatch.Settings.Instance.Enable.AnimalMonitor  = true;
+                    SkylinesOverwatch.Settings.Instance.Enable.Birds          = true;
 
                     _initialized = true;
 
                     _helper.Log("Initialized");
                 }
-                else if (_data.Seagulls.Length > 0)
+                else if (SkylinesOverwatch.Data.Instance.Seagulls.Length > 0)
                 {
                     CitizenManager instance = Singleton<CitizenManager>.instance;
 
-                    foreach (ushort i in _data.Seagulls)
+                    foreach (ushort i in SkylinesOverwatch.Data.Instance.Seagulls)
                     {
                         CitizenInstance seagull = instance.m_instances.m_buffer[(int)i];
 
