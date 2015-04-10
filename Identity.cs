@@ -11,7 +11,7 @@ namespace RemoveSeagulls
 
         public string Description
         {
-            get { return "Nonpermanently removes all seagulls. Disable to get the seagulls back. Requires [ARIS] Skylines Overwatch."; }
+            get { return "Nonpermanently removes all seagulls. Disable to get the seagulls back."; }
         }
     }
 }
