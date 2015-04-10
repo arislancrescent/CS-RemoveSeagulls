@@ -21,9 +21,25 @@ namespace RemoveSeagulls
 
         protected bool IsOverwatched()
         {
+            ulong skylinesOverwatchID;
+
+            #if DEBUG
+
+            return true;
+
+            #elif PTR
+
+            skylinesOverwatchID = 422560684;
+
+            #else
+
+            skylinesOverwatchID = 421028969;
+
+            #endif
+
             foreach (var plugin in PluginManager.instance.GetPluginsInfo())
             {
-                if (plugin.publishedFileID.AsUInt64 == 421028969)
+                if (plugin.publishedFileID.AsUInt64 == skylinesOverwatchID)
                     return true;
             }
 
@@ -66,7 +82,7 @@ namespace RemoveSeagulls
                 {
                     if (!IsOverwatched())
                     {
-                        _helper.Log("[ARIS] Skylines Overwatch not found. Terminating...");
+                        _helper.Log(_settings.Flair + " Skylines Overwatch not found. Terminating...");
                         _terminated = true;
 
                         return;
