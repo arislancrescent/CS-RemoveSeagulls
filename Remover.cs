@@ -99,9 +99,14 @@ namespace RemoveSeagulls
                     {
                         CitizenInstance seagull = instance.m_instances.m_buffer[(int)i];
 
-                        seagull.Info.m_maxRenderDistance = float.NegativeInfinity;
+                        if (seagull.Info != null)
+                        {
+                            seagull.Info.m_maxRenderDistance = float.NegativeInfinity;
 
-                        ((BirdAI)seagull.Info.m_citizenAI).m_randomEffect = null;
+                            ((BirdAI)seagull.Info.m_citizenAI).m_randomEffect = null;
+                        }
+
+                        SkylinesOverwatch.Helper.Instance.RequestAnimalRemoval(i);
                     }
                 }
             }
