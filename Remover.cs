@@ -89,20 +89,19 @@ namespace RemoveSeagulls
 
                     _helper.Log("Initialized");
                 }
-                else if (SkylinesOverwatch.Data.Instance.Seagulls.Length > 0)
+                else 
                 {
                     CitizenManager instance = Singleton<CitizenManager>.instance;
-                    int count = 0;
 
-                    foreach (ushort i in SkylinesOverwatch.Data.Instance.Seagulls)
+                    ushort[] seagulls = SkylinesOverwatch.Data.Instance.Seagulls;
+
+                    foreach (ushort i in seagulls)
                     {
                         CitizenInstance seagull = instance.m_instances.m_buffer[(int)i];
 
-                        if ((seagull.m_flags & CitizenInstance.Flags.Created) == CitizenInstance.Flags.None)
-                            continue;
+                        seagull.Info.m_maxRenderDistance = float.NegativeInfinity;
 
-                        instance.ReleaseCitizenInstance(i);
-                        count++;
+                        ((BirdAI)seagull.Info.m_citizenAI).m_randomEffect = null;
                     }
                 }
             }
