@@ -74,7 +74,7 @@ namespace RemoveSeagulls
                 {
                     if (!IsOverwatched())
                     {
-                        _helper.Log("Skylines Overwatch not found. Terminating...");
+                        _helper.NotifyPlayer("Skylines Overwatch not found. Terminating...");
                         _terminated = true;
 
                         return;
@@ -84,7 +84,7 @@ namespace RemoveSeagulls
 
                     _initialized = true;
 
-                    _helper.Log("Initialized");
+                    _helper.NotifyPlayer("Initialized");
                 }
                 else 
                 {
@@ -109,7 +109,7 @@ namespace RemoveSeagulls
             }
             catch (Exception e)
             {
-                string error = "Failed to initialize\r\n";
+                string error = String.Format("Failed to {0}\r\n", !_initialized ? "initialize" : "update");
                 error += String.Format("Error: {0}\r\n", e.Message);
                 error += "\r\n";
                 error += "==== STACK TRACE ====\r\n";
